@@ -11,7 +11,7 @@
     </div>
     <div class="foods-wrapper" ref="foodWrapper">
       <ul>
-        <li class="foot-list food-list-hook" v-for="item in goods">
+        <li class="foot-list food-list-hook" v-for="item in goods" @click="chooseFood(item)">
           <h3 class="title">{{item.name}}</h3>
           <ul>
             <li class="food-item" v-for="con in item.foods">
@@ -39,6 +39,7 @@
       </ul>
     </div>
     <div>
+      <food :food="selectedFood"></food>
       <shopCart></shopCart>
     </div>
   </div>
@@ -49,12 +50,14 @@ import data from '@/common/json/data.json'
 import BScroll from 'better-scroll'
 import cart from '@/components/cartControl'
 import shopCart from '@/components/shopcart'
+import food from '@/components/food'
 export default {
   data(){
     return {
       goods: [],
       listHeight: [],
-      currentIndex:1
+      selectedFood: [],
+      isOk:false
     }
   },
   props:{
@@ -79,13 +82,21 @@ export default {
         click:true,
         probeType:3
       })
+    },
+    chooseFood(food){
+      this.selectedFood = food;
+      this.isOk = false;
     }
   },
   computed:{
+     currentIndex(){
+       return 1;
+     }
   },
   components:{
     cart,
-    shopCart
+    shopCart,
+    food
   }
 }
 </script>
