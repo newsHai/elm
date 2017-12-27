@@ -3,7 +3,7 @@
         <transition name="fade">
             <div class="cart-decrease" v-show="con.num>0"  @click="reduce">
                 <transition name="inner">
-                    <i class="icon iconfont icon-jian1 icon1 inner"></i>
+                    <i class="icon iconfont icon-53 icon1 inner"></i>
                 </transition>
             </div>
         </transition>
@@ -27,11 +27,7 @@ export default {
             this.con.num--;
         }
     },
-    props:{
-        con:{
-            type:Object
-        }
-    }
+    props:['con']
 }
 </script>
 

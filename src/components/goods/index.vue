@@ -11,10 +11,10 @@
     </div>
     <div class="foods-wrapper" ref="foodWrapper">
       <ul>
-        <li class="foot-list food-list-hook" v-for="item in goods" @click="chooseFood(item)">
+        <li class="foot-list food-list-hook" v-for="item in goods">
           <h3 class="title">{{item.name}}</h3>
           <ul>
-            <li class="food-item" v-for="con in item.foods">
+            <li class="food-item" v-for="con in item.foods"  @click="chooseFood(con, $event)">
               <div class="Img">
                 <img :src="con.image" alt="">
               </div>
@@ -39,7 +39,7 @@
       </ul>
     </div>
     <div>
-      <food :food="selectedFood"></food>
+      <food :food="selectedFood" ref="food"></food>
       <shopCart></shopCart>
     </div>
   </div>
@@ -56,8 +56,7 @@ export default {
     return {
       goods: [],
       listHeight: [],
-      selectedFood: [],
-      isOk:false
+      selectedFood: []
     }
   },
   props:{
@@ -83,9 +82,12 @@ export default {
         probeType:3
       })
     },
-    chooseFood(food){
-      this.selectedFood = food;
-      this.isOk = false;
+    chooseFood(con, event){
+      if(!event._constructed){
+        return;
+      }
+      this.selectedFood = con;
+      this.$refs.food.show();
     }
   },
   computed:{
@@ -236,6 +238,7 @@ export default {
                   position: absolute;
                   right: 0;
                   bottom: -0.1rem;
+                  z-index:10;
                 }
               }
             }

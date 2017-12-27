@@ -4,7 +4,7 @@
           <div class="content-left">
               <div class="logo-wrapper">
                   <div class="logo" :class="{'highlight': price > 0}">
-                      <i class="icon iconfont icon-31gouwuchexuanzhong" :class="{'current': price > 0}"></i>
+                      <i class="icon iconfont icon-gouwuche1" :class="{'current': price > 0}"></i>
                   </div>
                   <div class="num" v-show="count > 0">{{count}}</div>
               </div>
