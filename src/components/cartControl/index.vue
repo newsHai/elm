@@ -1,14 +1,14 @@
 <template>
   <div class="cartControl">
         <transition name="fade">
-            <div class="cart-decrease" v-show="con.num>0"  @click="reduce">
+            <div class="cart-decrease" v-show="con.num>0"  @click.stop.prevent="reduce">
                 <transition name="inner">
                     <i class="icon iconfont icon-53 icon1 inner"></i>
                 </transition>
             </div>
         </transition>
         <span class="cart-count" v-show="con.num > 0">{{con.num}}</span>
-        <i class="icon iconfont icon-wuuiconxiangjifangda icon1" @click="add"></i>
+        <i class="icon iconfont icon-wuuiconxiangjifangda icon1" @click.stop.prevent="add($event)"></i>
   </div>
 </template>
 
@@ -16,7 +16,10 @@
 import Vue from 'vue';
 export default {
     methods:{
-        add(){
+        add(event){
+            if(!event._constructed){
+                return
+            }
             if(!this.con.num){
                 Vue.set(this.con,'num',1)
             }else{
