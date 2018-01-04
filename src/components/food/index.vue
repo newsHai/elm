@@ -31,7 +31,22 @@
                 <div class="split"></div>
                 <div class="rating">
                     <h3 class="title">商品评价</h3>
-                    <ratingselect :ratings="food.ratings"></ratingselect>
+                    <ratingselect :ratings="food.ratings" @increment="incrementTotal"></ratingselect>
+                    <div class="rating-wrapper">
+                        <ul>
+                            <li v-for="rating in food.ratings" class="rating-item">
+                               <div class="user">
+                                   <span class="name">{{rating.username}}</span>
+                                   <img :src="rating.avatar" alt="" width="12" height="12"/>
+                                </div> 
+                               <div class="time">{{rating.rateTime | formatDate}}</div>
+                               <p class="text">
+                                   <i class="icon iconfont" :class="{'icon-zan':rating.rateType === 0,'icon-cai':rating.rateType === 1}"></i>
+                                   {{rating.text}}
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -42,11 +57,15 @@
 import cart from '@/components/cartControl'
 import BScroll from 'better-scroll'
 import ratingselect from '@/components/ratingselect'
+import {formatDate} from '@/common/js/date.js'
+const ALL = 2;
 export default {
     data(){
         return {
             showFlag:false,
-            isOk:false
+            isOk:false,
+            selectType: ALL,
+            onlyContent: true
         }
     },
     methods:{
@@ -62,6 +81,15 @@ export default {
         },
         hide(){
             this.showFlag = false;
+        },
+        incrementTotal(){
+            
+        }
+    },
+    filters:{
+        formatDate(time){
+            let date = new Date(time);
+            return formatDate(date, 'yyyy-MM-dd hh:mm');
         }
     },
     props:['food'],
@@ -93,6 +121,7 @@ export default {
                 left: 0;
                 top:0;
                 width: 100%;
+                height:100%;
             }
             .back{
                 position: absolute;
@@ -180,6 +209,45 @@ export default {
                 margin-left: 0.36rem;
                 font-size: 0.28rem;
                 color: #07111b;
+            }
+            .rating-wrapper{
+                padding:0 0.36rem;
+                .rating-item{
+                    padding:0.32rem 0;
+                    position: relative; 
+                    border-bottom:1px solid #f2f2f3; 
+                    .user{
+                        position: absolute;
+                        right: 0;
+                        top: 0.32rem;
+                        line-height: 0.24rem;
+                        img{
+                            border-radius:50%;
+                        }
+                    }
+                    .time{
+                        margin-bottom: 0.12rem;
+                        line-height: 0.24rem;
+                        font-size: 0.2rem;
+                        color: #93999f;
+                    }
+                    .text{
+                        line-height: 0.32rem;
+                        font-size: 0.24rem;
+                        color: #07111b;
+                        .icon{
+                            margin-right: 0.08rem;
+                            line-height: 0.32rem;
+                            font-size: 0.24rem;
+                            &.icon-zan{
+                                color: #00a0dc;
+                            }
+                            &.icon-cai{
+                                color: #93999f;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

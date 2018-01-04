@@ -1,20 +1,20 @@
 <template>
   <div class="ratingselect">
       <div class="rating-type border-1px">
-            <span class="block positive active">
+            <span class="block positive active" @click="select(2,$event)">
                 全部
-                <span class="count"></span>
+                <span class="count">{{ratings.length}}</span>
             </span>
-            <span class="block positive">
+            <span class="block positive" @click="select(0,$event)">
                 推荐
-                <span class="count"></span>
+                <span class="count">{{positives.length}}</span>
             </span>
-            <span class="block negative">
+            <span class="block negative" @click="select(1,$event)">
                 吐槽
-                <span class="count"></span>
+                <span class="count">{{negatives.length}}</span>
             </span>
         </div>
-        <div class="switch" :class="{'on':onlyContent}">
+        <div class="switch" :class="{'on':onlyContent}" @click="changeSelect($event)">
             <i class="icon iconfont icon-gou"></i>
             <span>只看有内容的评价</span>
         </div>
@@ -31,6 +31,36 @@ export default {
     props:{
         ratings:{
             type:Array
+        }
+    },
+    methods:{
+        select(type,event){
+            if(!event._constructed){
+                return
+            }
+            this.selectType = type;
+            this.$emit('increment', 'selectType', type)
+        },
+        changeSelect(event){
+            if(!event._constructed){
+                return
+            }
+            this.onlyContent = !this.onlyContent;
+            this.$emit('increment','onlyContent', this.onlyContent)
+        }
+    },
+    computed: {
+        positives(){
+           let positives = this.ratings.filter((rating) => {
+               return rating.rateType === 0
+            })
+           return positives;
+        },
+        negatives(){
+            let negatives = this.ratings.filter((rating) => {
+               return rating.rateType === 1
+            })
+            return negatives;
         }
     }
 }
