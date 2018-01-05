@@ -61,9 +61,9 @@ export default {
   .tab_item{
     flex: 1;
     text-align: center;
-    
     a{
       font-size: 0.28rem;
+      color: #4d555d;
     }
   }
 }

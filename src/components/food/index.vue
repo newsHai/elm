@@ -31,10 +31,10 @@
                 <div class="split"></div>
                 <div class="rating">
                     <h3 class="title">商品评价</h3>
-                    <ratingselect :ratings="food.ratings" @increment="incrementTotal"></ratingselect>
+                    <ratingselect :selectType="selectType" :onlyContent="onlyContent" :ratings="food.ratings" @increment="incrementTotal"></ratingselect>
                     <div class="rating-wrapper">
-                        <ul>
-                            <li v-for="rating in food.ratings" class="rating-item">
+                        <ul v-show="food.ratings && food.ratings.length">
+                            <li v-for="rating in food.ratings" class="rating-item" v-show="needShow(rating.rateType,rating.text)">
                                <div class="user">
                                    <span class="name">{{rating.username}}</span>
                                    <img :src="rating.avatar" alt="" width="12" height="12"/>
@@ -58,13 +58,12 @@ import cart from '@/components/cartControl'
 import BScroll from 'better-scroll'
 import ratingselect from '@/components/ratingselect'
 import {formatDate} from '@/common/js/date.js'
-const ALL = 2;
 export default {
     data(){
         return {
             showFlag:false,
             isOk:false,
-            selectType: ALL,
+            selectType: 2,
             onlyContent: true
         }
     },
@@ -82,8 +81,19 @@ export default {
         hide(){
             this.showFlag = false;
         },
-        incrementTotal(){
-            
+        incrementTotal(type,data){
+            this[type] = data;
+        },
+        needShow(type, text){
+            // 是否展示带有评语的评价
+            if(this.onlyContent && !text){
+                return false
+            }
+            if(this.selectType === 2){
+                return true
+            }else{
+                return type = this.selectType;
+            }
         }
     },
     filters:{
@@ -108,7 +118,14 @@ export default {
         top: 0;
         width: 100%;
         bottom: 0.96rem;  
-        
+        &.fade-enter-active, &.fade-leave-active {
+            transition: all 0.2s linear;
+            transform: translate3d(0, 0, 0);
+        }
+        &.fade-enter, &.fade-leave-active {
+            opacity: 0;
+            transform: translate3d(100%, 0, 0);
+        }
     }
     .food-content{
         .img-header{

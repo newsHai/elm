@@ -30,7 +30,7 @@
                   <span class="old" v-show="con.oldPrice !== ''">￥{{con.oldPrice}}</span>
                 </div>
                 <div class="cartControl-wrapper">
-                  <cart :con="con"></cart>
+                  <cart :con="con" @increment="incrementTotal"></cart>
                 </div>
               </div>
             </li>
@@ -40,7 +40,7 @@
     </div>
     <div>
       <food :food="selectedFood" ref="food"></food>
-      <shopCart></shopCart>
+      <shopCart :selectedFood="selectedFood" :minPrice="seller.minPrice" :deliveryPrice="seller.deliveryPrice" ref="shopCart"></shopCart>
     </div>
   </div>
 </template>
@@ -88,6 +88,10 @@ export default {
       }
       this.selectedFood = con;
       this.$refs.food.show();
+    },
+    incrementTotal(target){
+      this.$refs.shopCart.drop(target);
+      // console.log(target)
     }
   },
   computed:{

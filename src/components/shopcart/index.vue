@@ -9,7 +9,7 @@
                   <div class="num" v-show="count > 0">{{count}}</div>
               </div>
               <div class="price" :class="{'current': price > 0}">￥{{price}}</div>
-              <div class="desc" v-show="price > 0" :class="{'current': price > 0}">另需配送费￥4元</div>
+              <div class="desc" v-show="price > 0" :class="{'current': price > 0}">另需配送费￥{{deliveryPrice}}元</div>
           </div>
           <div class="content-right">
               <div class="pay" :class="payClass">
@@ -28,6 +28,22 @@ export default {
             count:0
         }
     },
+    props:{
+        selectedFood:{
+            type:Array,
+            default(){
+                return [{price:20,count:2}]
+            }
+        },
+        minPrice:{
+            type:Number,
+            default:0
+        },
+        deliveryPrice:{
+            type:Number,
+            default:0
+        }
+    },
     computed:{
         payClass(){
             return this.price > 20 ? 'enough' : 'not-enough'
@@ -36,9 +52,15 @@ export default {
             if(this.price > 20){
                 return '去结算'
             }else{
-                return `还差￥${(20-this.price)}元起送`
+                return `还差￥${(20 - this.price)}元起送`
             }
              
+        }
+        
+    },
+    methods: {
+        drop(el){
+
         }
     }
 }

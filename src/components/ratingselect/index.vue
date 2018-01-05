@@ -1,20 +1,20 @@
 <template>
   <div class="ratingselect">
       <div class="rating-type border-1px">
-            <span class="block positive active" @click="select(2,$event)">
+            <span class="block positive" @click="select(2,$event)" :class="{'active':choose === 2}">
                 全部
                 <span class="count">{{ratings.length}}</span>
             </span>
-            <span class="block positive" @click="select(0,$event)">
+            <span class="block positive" @click="select(0,$event)" :class="{'active':choose === 0}">
                 推荐
                 <span class="count">{{positives.length}}</span>
             </span>
-            <span class="block negative" @click="select(1,$event)">
+            <span class="block negative" @click="select(1,$event)" :class="{'active':choose === 1}">
                 吐槽
                 <span class="count">{{negatives.length}}</span>
             </span>
         </div>
-        <div class="switch" :class="{'on':onlyContent}" @click="changeSelect($event)">
+        <div class="switch" :class="{'on':emerge}" @click="changeSelect($event)">
             <i class="icon iconfont icon-gou"></i>
             <span>只看有内容的评价</span>
         </div>
@@ -23,14 +23,23 @@
 
 <script>
 export default {
-    data(){
-        return {
-            onlyContent:true
-        }
-    },
     props:{
         ratings:{
             type:Array
+        },
+        selectType:{
+            type:Number,
+            default:2
+        },
+        onlyContent:{
+            type:Boolean,
+            default:false
+        }
+    },
+    data(){
+        return {
+            choose:this.selectType,
+            emerge:this.onlyContent
         }
     },
     methods:{
@@ -38,15 +47,15 @@ export default {
             if(!event._constructed){
                 return
             }
-            this.selectType = type;
+            this.choose = type;
             this.$emit('increment', 'selectType', type)
         },
         changeSelect(event){
             if(!event._constructed){
                 return
             }
-            this.onlyContent = !this.onlyContent;
-            this.$emit('increment','onlyContent', this.onlyContent)
+            this.emerge = !this.emerge;
+            this.$emit('increment','onlyContent', this.emerge)
         }
     },
     computed: {
@@ -87,6 +96,10 @@ export default {
         }
         &.negative{
             background-color: rgba(77,85,93,.2);
+            &.active{
+                color: #fff;
+                background-color: #4d555d;
+            }
         }
     }
 }

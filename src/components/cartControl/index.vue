@@ -25,8 +25,12 @@ export default {
             }else{
                 this.con.num++;
             }
+            this.$emit('increment', event.target);
         },
         reduce(){
+            if(!event._constructed){
+                return
+            }
             this.con.num--;
         }
     },
