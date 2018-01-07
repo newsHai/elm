@@ -40,7 +40,7 @@
     </div>
     <div>
       <food :food="selectedFood" ref="food"></food>
-      <shopCart :selectedFood="selectedFood" :minPrice="seller.minPrice" :deliveryPrice="seller.deliveryPrice" ref="shopCart"></shopCart>
+      <shopCart :select-foods="selectFoods" :minPrice="seller.minPrice" :deliveryPrice="seller.deliveryPrice" ref="shopCart"></shopCart>
     </div>
   </div>
 </template>
@@ -97,7 +97,18 @@ export default {
   computed:{
      currentIndex(){
        return 1;
-     }
+     },
+     selectFoods(){
+      let foods = [];
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if(food.count){
+            foods.push(food);
+          }
+        })
+      })
+      return foods;
+    }
   },
   components:{
     cart,

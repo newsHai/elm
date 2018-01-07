@@ -8,7 +8,7 @@
             </div>
         </transition>
         <span class="cart-count" v-show="con.num > 0">{{con.num}}</span>
-        <i class="icon iconfont icon-wuuiconxiangjifangda icon1" @click.stop.prevent="add($event)"></i>
+        <i class="icon iconfont icon-wuuiconxiangjifangda icon1" @click.stop.prevent="addCart($event)"></i>
   </div>
 </template>
 
@@ -16,7 +16,7 @@
 import Vue from 'vue';
 export default {
     methods:{
-        add(event){
+        addCart(event){
             if(!event._constructed){
                 return
             }

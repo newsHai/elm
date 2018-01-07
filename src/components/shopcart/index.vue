@@ -3,13 +3,13 @@
       <div class="content">
           <div class="content-left">
               <div class="logo-wrapper">
-                  <div class="logo" :class="{'highlight': price > 0}">
-                      <i class="icon iconfont icon-gouwuche1" :class="{'current': price > 0}"></i>
+                  <div class="logo" :class="{'highlight': totalPrice > 0}">
+                      <i class="icon iconfont icon-gouwuche1" :class="{'current': totalPrice > 0}"></i>
                   </div>
-                  <div class="num" v-show="count > 0">{{count}}</div>
+                  <div class="num" v-show="totalCount > 0">{{totalCount}}</div>
               </div>
-              <div class="price" :class="{'current': price > 0}">￥{{price}}</div>
-              <div class="desc" v-show="price > 0" :class="{'current': price > 0}">另需配送费￥{{deliveryPrice}}元</div>
+              <div class="price" :class="{'current': totalPrice > 0}">￥{{totalPrice}}</div>
+              <div class="desc" v-show="totalPrice > 0" :class="{'current': totalPrice > 0}">另需配送费￥{{deliveryPrice}}元</div>
           </div>
           <div class="content-right">
               <div class="pay" :class="payClass">
@@ -24,15 +24,18 @@
 export default {
     data(){
         return {
-            price:0,
-            count:0
+            
+            
         }
     },
+    mounted () {
+        console.log(this.selectFoods)
+    },
     props:{
-        selectedFood:{
+        selectFoods:{
             type:Array,
             default(){
-                return [{price:20,count:2}]
+                return [{price:10,count:1}]
             }
         },
         minPrice:{
@@ -46,21 +49,37 @@ export default {
     },
     computed:{
         payClass(){
-            return this.price > 20 ? 'enough' : 'not-enough'
+            return this.totalPrice > 20 ? 'enough' : 'not-enough'
         },
         payDesc(){
-            if(this.price > 20){
-                return '去结算'
+            if(this.totalPrice === 0){
+                return `${this.minPrice}元起送`;
+            }else if(this.totalPrice < this.minPrice){
+                var diff= this.minPrice - this.totalPrice;
+                return `还差￥${diff}元起送`
             }else{
-                return `还差￥${(20 - this.price)}元起送`
+                return '去结算';
             }
-             
+        },
+        totalPrice(){
+            let total = 0;
+            this.selectFoods.forEach((food) => {
+                total += food.price * food.count
+            });
+            return total;
+        },
+        totalCount(){
+            let count = 0;
+            this.selectFoods.forEach((food) => {
+                count += food.count
+            });
+            return count;
         }
-        
     },
     methods: {
         drop(el){
-
+            // console.log(el);
+            // this.count++
         }
     }
 }
@@ -85,7 +104,7 @@ export default {
                     display: inline-block;
                     position: relative;
                     top: -0.2rem;
-                    margin:0 0.14rem 0 0.24rem;
+                    margin:0 0.14rem 0 0.1rem;
                     width: 1.12rem;
                     height: 1.12rem;
                     box-sizing:border-box;
