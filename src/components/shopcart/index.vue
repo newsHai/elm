@@ -1,6 +1,6 @@
 <template>
   <div class="shopCart">
-      <div class="content">
+      <div class="content" @click="toggleList()">
           <div class="content-left">
               <div class="logo-wrapper">
                   <div class="logo" :class="{'highlight': totalPrice > 0}">
@@ -17,19 +17,41 @@
               </div>
           </div>
       </div>
+      <transition name="fade">
+        <div class="shopcart-list" v-show="listShow">
+            <div class="list-header">
+                <h3 class="title">购物车</h3>
+                <span class="empty" @click="empty">清空</span>
+            </div>
+            <div class="list-content" ref="listContent">
+                <ul>
+                    <li class="shopcart-food" v-for="food in selectFoods">
+                        <span class="name">{{food.name}}</span>
+                        <div class="price">
+                            <span>￥{{food.price*food.num}}</span>
+                        </div>
+                        <div class="cartcontrol-wrapper">
+                            <cart :con="food"></cart>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+      </transition>
+      <transition name="fade">
+        <div class="list-mask" v-show="listShow"></div>
+      </transition>
   </div>
 </template>
 
 <script>
+import BScroll from 'better-scroll'
+import cart from '@/components/cartControl'
 export default {
     data(){
         return {
-            
-            
+         fold: true
         }
-    },
-    mounted () {
-        console.log(this.selectFoods)
     },
     props:{
         selectFoods:{
@@ -64,23 +86,60 @@ export default {
         totalPrice(){
             let total = 0;
             this.selectFoods.forEach((food) => {
-                total += food.price * food.count
+                total += food.price * food.num
             });
             return total;
         },
         totalCount(){
             let count = 0;
             this.selectFoods.forEach((food) => {
-                count += food.count
+                count += food.num
             });
             return count;
+        },
+        listShow(){
+           
+            if(!this.totalCount){
+                this.fold = true;
+                return false;
+            }
+            let show = !this.fold;
+            if (show) {
+                this.$nextTick(() => {
+                    if (!this.scroll) {
+                        this.scroll = new BScroll(this.$refs.listContent, {
+                            click: true
+                        });
+                    } else {
+                    this.scroll.refresh();
+                    }
+                });
+            }
+            return show;
         }
     },
     methods: {
         drop(el){
             // console.log(el);
             // this.count++
+        },
+        toggleList(){
+           
+            if(!this.totalCount){
+                 
+                return;
+            }
+            this.fold = !this.fold;
+            
+        },
+        empty(){
+            this.selectFoods.forEach((food) => {
+                food.num = 0;
+            })
         }
+    },
+    components:{
+        cart
     }
 }
 </script>
@@ -190,6 +249,93 @@ export default {
                     }               
                 }
             }
+        }
+        .shopcart-list{
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            text-align: left;
+            z-index: -1;
+            transform: translate3d(0, -100%, 0);
+             &.fade-enter-active, &.fade-leave-active {
+                transition: all 0.5s;
+                transform: translate3d(0, -100%, 0);
+            }
+            &.fade-enter, &.fade-leave-active {
+                transform: translate3d(0, 0, 0);
+            }
+            .list-header{
+                height: 0.8rem;
+                line-height: 0.8rem;
+                padding: 0 0.36rem;
+                background-color: #f3f5f7;
+                border-bottom: 1px solid rgba(7,17,27,.1);
+                .title{
+                    float: left;
+                    text-align: left;
+                    font-size: 0.28rem;
+                    color: #07111b;
+                }
+                .empty{
+                    float: right;
+                    font-size: 0.24rem;
+                    color: #00a0dc;
+                }
+            }
+            .list-content{
+                padding: 0 0.36rem;
+                max-height: 2.17rem;
+                overflow: hidden;
+                background-color: #fff;
+                .shopcart-food{
+                    position: relative;
+                    padding: 0.24rem 0;
+                    box-sizing:border-box;
+                    .name{
+                        line-height: 0.48rem;
+                        font-size: 0.28rem;
+                        color: #07111b;
+                    }
+                    .price{
+                        position: absolute;
+                        right: 1.8rem;
+                        bottom: 0.24rem;
+                        line-height: 0.48rem;
+                        
+                        font-weight: 700;
+                        color: #f01414;
+                        span{
+                            font-size: 0.28rem;
+                        }
+                    }
+                    .cartcontrol-wrapper{
+                        position: absolute;
+                        right: 0;
+                        bottom: 0.24rem;
+                    }
+                }
+            }
+        }
+        .list-mask{
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-color: rgba(7,17,27,0.6);
+            &.fade-enter-active, &.fade-leave-active{
+                opacity: 1;
+                transition: all 0.5s;
+                background-color: rgba(7,17,27,0.6);
+            }
+            &.fade-enter, &.fade-leave{
+                opacity: 0;
+                transition: all 0.5s;
+                background-color: rgba(7,17,27,0);
+            }
+            
         }
     }
 </style>

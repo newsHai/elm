@@ -19,9 +19,9 @@
                         <span class="old" v-show="food.oldPrice !== ''">￥{{food.oldPrice}}</span>
                     </div>
                     <div class="carControl-wrapper">
-                        <cart :con="food" v-show="isOk"></cart>
+                        <cart :con="food"></cart>
                     </div>
-                    <div class="buy">加入购物车</div>
+                    <div class="buy" @click.stop.prevent="addFirst($event)" v-show="!food.num || food.num === 0">加入购物车</div>
                 </div>
                 <div class="split"></div>
                 <div class="info">
@@ -58,6 +58,7 @@ import cart from '@/components/cartControl'
 import BScroll from 'better-scroll'
 import ratingselect from '@/components/ratingselect'
 import {formatDate} from '@/common/js/date.js'
+import Vue from 'vue'
 export default {
     data(){
         return {
@@ -94,6 +95,12 @@ export default {
             }else{
                 return type = this.selectType;
             }
+        },
+        addFirst(){
+            if (!event._constructed) {
+                return;
+            }
+            Vue.set(this.food, 'num', 1);
         }
     },
     filters:{
@@ -185,8 +192,8 @@ export default {
             }
             .carControl-wrapper{
                 position: absolute;
-                right: 0.5rem;
-                bottom: 0.5rem;
+                right: 0.35rem;
+                bottom: 0.35rem;
                 
             }
             .buy{

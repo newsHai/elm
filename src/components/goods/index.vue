@@ -96,13 +96,13 @@ export default {
   },
   computed:{
      currentIndex(){
-       return 1;
+       return 0;
      },
      selectFoods(){
       let foods = [];
       this.goods.forEach((good) => {
         good.foods.forEach((food) => {
-          if(food.count){
+          if(food.num){
             foods.push(food);
           }
         })
@@ -131,6 +131,7 @@ export default {
       background-color: #f3f5f7;
       ul{
         .menu-item{
+          width:100%;
           display: table;
           height: 1.08rem;
           line-height: 0.28rem;
