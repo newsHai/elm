@@ -123,8 +123,8 @@ export default {
     position: absolute;
     width: 100%;
     display: flex;
-    top: 174px;
-    bottom: 46px;
+    top: 3.39rem;
+    bottom: 0.92rem;
     overflow: hidden;
     .menu-wrapper{
       width: 1.6rem;

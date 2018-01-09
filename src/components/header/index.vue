@@ -208,6 +208,7 @@ export default {
         width: 100%;
         height: 100%;
         background:rgba(7,17,27,.8);
+        z-index: 51;
         .detail-wrapper{
             padding-top: 1.28rem;
             h2{
